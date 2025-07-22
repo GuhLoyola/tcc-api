@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 from db.models import Model
 from db.models import Prediction
+from schemas.feedback_schema import FeedbackResponse
 from schemas.model_schema import ModelSchema
 from sqlalchemy.orm import Session
 from db.deps import get_db
@@ -96,3 +97,31 @@ def list_predictions(db: Session = Depends(get_db)):
             } for prediction in predictions
         ]
     }
+
+@router.get(
+    "/metrics",
+    summary="Retorna métricas detalhadas do modelo",
+    description="Exibe métricas como acurácia, precisão, recall, F1-score, taxa de falso positivo e falso negativo."
+)
+def get_metrics():
+    try:
+        #Por enquanto, retornando métricas fixas como exemplo.
+        #Na aplicação real, essas métricas serão calculadas dinamicamente.
+        metrics = {
+            "accuracy": 0.95,
+            "precision": 0.92,
+            "recall": 0.89,
+            "f1_score": 0.90,
+            "false_positive_rate": 0.03,
+            "false_negative_rate": 0.07,
+            "model_version": "TF-IDF 1.0"
+        }
+        return {
+            "Message": "Métricas do modelo encontradas!",
+            "Metrics": metrics
+        }
+    except Exception as e:
+        return {
+            "Message": "Erro ao buscar métricas do modelo.",
+            "Error": str(e)
+        }

@@ -30,7 +30,7 @@ def predict(payload: PredictionRequest, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_prediction)
     
-    return PredictionResponse(text=payload.text, prediction=prediction, prediction_id=new_prediction.id)
+    return PredictionResponse(text=payload.text, prediction=prediction)
     
 @router.post(
     "/feedback", 
