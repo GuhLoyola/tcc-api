@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routes import system_routes, ml_routes
+from routes import ml_routes, system_routes
 from fastapi.middleware.cors import CORSMiddleware
 from core.config import settings
 
@@ -17,5 +17,5 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(system_routes.router,prefix="/admin", tags= ["Administrador"])
-app.include_router(ml_routes.router, prefix="/model", tags=["Machine Learning"])
+app.include_router(ml_routes.router, prefix="/ml", tags= ["Machine Learning"])
+app.include_router(system_routes.router, prefix="/admin", tags= ["Administrador"])
