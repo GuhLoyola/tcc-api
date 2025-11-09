@@ -36,7 +36,7 @@ def upgrade() -> None:
 
     op.create_table('prediction',
         sa.Column('id', sa.Integer(), nullable=False, autoincrement=True),
-        sa.Column('input_text', sa.String(length=32), nullable=False),
+        sa.Column('input_text', sa.String(), nullable=False),
         sa.Column('result', sa.String(length=32), nullable=False),
         sa.Column('created_at', sa.DateTime(), nullable=False),
         sa.PrimaryKeyConstraint('id'),
