@@ -29,24 +29,37 @@ def make_prediction(url: str, db: Session):
     if model is None or encoder is None:
         raise HTTPException(
             status_code=400,
-            detail="Nenhum modelo treinado disponível. Por favor, use a rota de treinamento para treinar o modelo antes de fazer previsões."
+            detail="Nenhum modelo treinado disponível. Por favor, use a rota de treinamento antes de fazer previsões."
         )
-        
+    
     if hasattr(model, "predict_proba"):
-        probs = model.predict_proba(features)[0] 
+        probs = model.predict_proba(features)[0]
         prob_dict = dict(zip(encoder.classes_, map(float, probs)))
 
-        phishing_class = "phishing"
-        phishing_prob = prob_dict.get(phishing_class, 0.0)
-        result_label = "phishing" if phishing_prob >= 0.5 else "benign"
+        phishing_related = ["phishing", "malware", "defacement"]
+        phishing_confidence = sum(prob_dict.get(cls, 0.0) for cls in phishing_related)
 
-        confidence = max(prob_dict.values())
+        top_class = max(prob_dict, key=prob_dict.get)
+        confidence = float(prob_dict[top_class])
+
+        if phishing_confidence > prob_dict.get("benign", 0.0):
+            result_label = "phishing"
+            confidence = phishing_confidence
+        else:
+            result_label = "benign"
+            confidence = prob_dict.get("benign", 0.0)
+    
     else:
         pred_label_encoded = model.predict(features)[0]
         pred_label = encoder.inverse_transform([pred_label_encoded])[0]
 
-        result_label = pred_label
+        if pred_label in {"malware", "defacement"}:
+            result_label = "phishing"
+        else:
+            result_label = pred_label
+
         prob_dict = {cls: None for cls in encoder.classes_}
+        confidence = None
 
     prob_dict['url_status_code'] = url_status
 
@@ -61,6 +74,4 @@ def make_prediction(url: str, db: Session):
         confidence=confidence,
         probabilities=prob_dict,   
         prediction_id=new_prediction.id
-    )
-    
-    
+    )    

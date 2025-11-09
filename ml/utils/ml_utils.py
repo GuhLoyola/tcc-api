@@ -20,16 +20,17 @@ def is_valid_url(url: str) -> bool:
 def extract_features(url: str) -> pd.DataFrame:
     features = {}
 
-    if url.startswith(("http://", "https://")):
-        url = re.sub(r"^https?://", "", url)
+    if not url.startswith(("http://", "https://")):
+        url = "http://" + url
 
-    safe_url = url if '://' in url else 'http://' + url
-    
+    if not url.endswith("/"):
+        url += "/"
+
     parsed_url = None
     try:
-        parsed_url = urlparse(safe_url)
+        parsed_url = urlparse(url)
         netloc = parsed_url.netloc
-        tld = netloc.split('.')[-1]
+        tld = netloc.split('.')[-1] if '.' in netloc else ''
     except Exception:
         tld = ''
         netloc = ''
@@ -39,7 +40,6 @@ def extract_features(url: str) -> pd.DataFrame:
     features['num_special_chars'] = sum(c in string.punctuation for c in url)
     features['num_subdomains'] = netloc.count('.') - 1 if netloc else 0
     features['has_ip'] = int(bool(re.search(r'\d+\.\d+\.\d+\.\d+', netloc)))
-    features['has_https'] = int(parsed_url is not None and parsed_url.scheme == 'https')
     features['num_params'] = url.count('?')
     features['num_fragments'] = url.count('#')
     features['num_slashes'] = url.count('/')
