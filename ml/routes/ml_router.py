@@ -7,7 +7,7 @@ from ml.schemas.metrics import MetricsSchema
 from ml.schemas.ml import PredictionSchema
 from ml.services.feedback_service import get_feedbacks, update_feedback
 from ml.services.metrics_service import get_metrics
-from ml.services.ml_service import get_predictions, make_prediction
+from ml.services.ml_service import get_predictions, get_predictions_count, make_prediction
 from user.models.user import User
 
 ml_router = APIRouter(
@@ -23,6 +23,11 @@ def prediction_post(url: str, db: Session = Depends(get_db)):
 @ml_router.get('/predictions')
 def prediction_list(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     predictions = get_predictions(db)
+    return predictions
+
+@ml_router.get('/predictions/count')
+def predictions_count( db: Session = Depends(get_db)):
+    predictions = get_predictions_count(db)
     return predictions
 
 @ml_router.get('/metrics', response_model=list[MetricsSchema])
