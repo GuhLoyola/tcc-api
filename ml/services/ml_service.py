@@ -10,6 +10,9 @@ load_model = model_manager
 def get_predictions(db: Session):
     return db.query(Prediction).all()
 
+def get_predictions_count(db: Session):
+    return db.query(Prediction).count()
+
 def make_prediction(url: str, db: Session):
     is_url = url.strip()
     
