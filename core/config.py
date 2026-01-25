@@ -39,7 +39,8 @@ class Settings(BaseSettings):
     
     MODEL_PATH: Path = Path(os.getenv("MODEL_PATH", BASE_DIR / "ml" / "model" / "rf_model.pkl"))
     ENCODER_PATH: Path = Path(os.getenv("ENCODER_PATH", BASE_DIR / "ml" / "model" /  "label_encoder.pkl"))
-    DATASET_PATH: Path = Path(os.getenv("DATASET_PATH", BASE_DIR / "ml" / "model" /  "dataset" / "malicious_phish.csv"))
+    ORIGINAL_DATASET_PATH: Path = Path(os.getenv("DATASET_PATH", BASE_DIR / "ml" / "model" /  "dataset" / "malicious_phish.csv"))
+    DATASET_PATH: Path = Path(os.getenv("DATASET_PATH", BASE_DIR / "ml" / "model" /  "dataset" / "normalized_dataset.csv"))
 
     @computed_field
     @property
