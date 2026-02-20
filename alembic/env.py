@@ -14,6 +14,8 @@ from alembic import context
 config = context.config
 # Set the DB URL
 config.set_main_option("sqlalchemy.url", str(settings.SQLALCHEMY_DATABASE_URI))
+print("=== Alembic DB URL ===") 
+print(repr(settings.SQLALCHEMY_DATABASE_URI))
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

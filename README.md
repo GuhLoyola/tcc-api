@@ -35,6 +35,12 @@ Caso estiver utilizando *Git Bash*, substitua o **bin** por **Scripts** no coman
     pip install -r requirements.txt
 ```
 
+#### Crie um arquivo .env e adicione as variáveis ​​env necessárias a ele (o exemplo de variáveis ​​obrigatórias pode ser visto em .env.local):
+
+```bash
+    cp .env.local .env
+```
+
 #### Crie as tabelas no banco de dados
 
 Antes de iniciar o servidor, execute o comando abaixo para criar as tabelas no banco de dados através do Alembic:
